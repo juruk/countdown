@@ -7,30 +7,52 @@
   <style>
     :root[data-theme="dark"] { --bg:#000; --fg:#fff; --muted:#cfcfcf; --card:#0f0f0f; --border:#2a2a2a; --headline:#fff; --subtle:#b5b5b5; --glow:rgba(255,255,255,.16); --btn-bg:#121212; --btn-fg:#fff; --btn-border:#2a2a2a; --btn-active:#1a1a1a; }
     :root[data-theme="light"] { --bg:#fff; --fg:#000; --muted:#444; --card:#fff; --border:#d9d9d9; --headline:#000; --subtle:#666; --glow:rgba(0,0,0,.12); --btn-bg:#f7f7f7; --btn-fg:#000; --btn-border:#d9d9d9; --btn-active:#efefef; }
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;min-height:100svh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif}
+
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;min-height:100svh;display:grid;place-items:center;background:var(--bg);color:var(--fg);
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif}
+
     .wrap{width:min(1100px,94vw);padding:10px 0 20px}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:6px}
     .brand{width:clamp(140px,18vw,240px);height:auto;display:block}
     :root[data-theme="dark"] .brand{filter:invert(1) brightness(1.08)}
     :root[data-theme="light"] .brand{filter:none}
-    h1{text-align:center;font-weight:800;letter-spacing:.2px;line-height:1.25;margin:8px 0 14px;color:var(--headline)}
+
+    /* Styled two-line title */
+    h1{margin:10px 0 14px}
+    #mainTitle{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;line-height:1.2;color:var(--headline)}
+    #mainTitle .row1{font-size:clamp(22px,4.6vw,40px);font-weight:700;letter-spacing:.2px}
+    #mainTitle .row1 .lead{font-weight:700;color:var(--subtle)}
+    #mainTitle .row1 .date{font-weight:700}
+    #mainTitle .row1 .time{font-weight:900;text-shadow:0 0 14px var(--glow)}
+    #mainTitle .row2{font-size:clamp(20px,4.2vw,36px);font-weight:600;color:var(--headline);letter-spacing:.15px}
+    #mainTitle .row2 .brand{font-weight:900; letter-spacing:.06em}
+
     .timer{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-    .cell{background:linear-gradient(180deg,var(--card),#0b0b0b00);border:1px solid var(--border);border-radius:16px;padding:16px 10px;box-shadow:0 6px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.02)}
-    :root[data-theme="light"] .cell{box-shadow:0 6px 24px rgba(0,0,0,.08), inset 0 1px 0 rgba(0,0,0,.02)}
-    .number{font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px;font-size:clamp(28px,6.2vw,56px);line-height:1;margin-bottom:8px;text-shadow:0 0 18px var(--glow);color:var(--headline)}
+    .cell{background:linear-gradient(180deg,var(--card),#0b0b0b00);border:1px solid var(--border);border-radius:16px;padding:16px 10px;
+          box-shadow:0 6px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(0,0,0,.02)}
+    :root[data-theme="dark"] .cell{box-shadow:0 6px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.02)}
+    .number{font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px;
+            font-size:clamp(28px,6.2vw,56px);line-height:1;margin-bottom:8px;text-shadow:0 0 18px var(--glow);color:var(--headline)}
     .label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--subtle)}
+
     @keyframes blink{50%{opacity:.45}} .blink .number,.phase-card.blink{animation:blink .9s steps(2,start) infinite}
+
     .phases{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .phase-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.2)}
-    :root[data-theme="light"] .phase-card{box-shadow:0 6px 24px rgba(0,0,0,.08)}
+    .phase-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+    :root[data-theme="dark"] .phase-card{box-shadow:0 6px 24px rgba(0,0,0,.2)}
     .phase-title{font-weight:700;color:var(--headline);font-size:clamp(15px,2.2vw,18px)}
     .phase-deadline{color:var(--muted);font-size:12px;margin-top:2px}
     .phase-timer{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
     .p-cell{background:transparent;border:1px dashed var(--border);border-radius:10px;padding:10px 6px}
-    .p-number{font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(18px,4.6vw,28px);line-height:1;margin-bottom:6px;color:var(--headline);text-shadow:0 0 12px var(--glow)}
+    .p-number{font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(18px,4.6vw,28px);
+              line-height:1;margin-bottom:6px;color:var(--headline);text-shadow:0 0 12px var(--glow)}
     .p-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--subtle)}
-    .done-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.08em;text-transform:uppercase;font-size:clamp(34px,7vw,80px);color:#000;background:rgba(255,255,255,.85);border-radius:12px;pointer-events:none}
+
+    .done-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.08ем;
+                  text-transform:uppercase;font-size:clamp(34px,7vw,80px);color:#000;background:rgba(255,255,255,.85);border-radius:12px;pointer-events:none}
     .is-done .done-overlay{display:flex} .is-done .phase-timer{opacity:.15;filter:grayscale(1)}
+
     .meta{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:12px 0 8px}
     .pill{font-size:12px;padding:6px 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);color:var(--muted)}
     .pill b{color:var(--fg);font-weight:800}
@@ -38,11 +60,14 @@
     .sub{color:var(--muted);font-size:14px;margin:8px 0 12px;text-align:center}
     .deadline{margin-top:4px;font-size:13px;color:var(--muted);text-align:center}
     .expired{margin-top:10px;font-size:14px;color:var(--fg);font-weight:800;display:none;text-align:center}
+
     .footer{display:flex;justify-content:center;margin-top:14px}
     .seg{display:inline-flex;border:1px solid var(--btn-border);border-radius:999px;overflow:hidden}
     .seg button{background:var(--btn-bg);color:var(--btn-fg);border:0;padding:8px 12px;font-size:12px;cursor:pointer}
     .seg button+button{border-left:1px solid var(--btn-border)} .seg button[aria-pressed="true"]{background:var(--btn-active);font-weight:700}
-    @media (max-width:900px){.phases{grid-template-columns:1fr}} @media (max-width:720px){.header{flex-direction:column;align-items:flex-start;gap:10px} h1{text-align:left} .timer{grid-template-columns:repeat(3,1fr)}}
+
+    @media (max-width:900px){.phases{grid-template-columns:1fr}}
+    @media (max-width:720px){.header{flex-direction:column;align-items:flex-start;gap:10px} #mainTitle{align-items:flex-start;text-align:left} .timer{grid-template-columns:repeat(3,1fr)}}
   </style>
 </head>
 <body>
@@ -52,7 +77,14 @@
       <div></div>
     </div>
 
-    <h1 id="mainTitle" aria-live="polite"></h1>
+    <!-- Two-line dynamic title -->
+    <h1 id="mainTitle" aria-live="polite">
+      <div class="row1">
+        <span class="lead">Сега е - </span>
+        <span class="date" id="titleDate">среда, 24 септември <span class="time" id="titleTime">10:08</span>,</span>
+      </div>
+      <div class="row2">а крајот на рокот за <span class="brand">ЛЕАР</span> е за:</div>
+    </h1>
 
     <div id="mainTimer" class="timer" role="timer" aria-live="polite">
       <div class="cell"><div class="number" id="weeks">00</div><div class="label">недели</div></div>
@@ -74,19 +106,19 @@
 
     <div class="footer" aria-label="Theme">
       <div class="seg">
-        <button id="btnDark"  type="button" aria-pressed="true">Dark</button>
-        <button id="btnLight" type="button" aria-pressed="false">Light</button>
+        <button id="btnDark"  type="button" aria-pressed="false">Dark</button>
+        <button id="btnLight" type="button" aria-pressed="true">Light</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Theme
+    // Theme (default: light)
     const htmlEl=document.documentElement, btnDark=document.getElementById('btnDark'), btnLight=document.getElementById('btnLight'), THEME_KEY='countdown_theme_bw';
     function applyTheme(t){ htmlEl.setAttribute('data-theme',t); btnDark.setAttribute('aria-pressed',String(t==='dark')); btnLight.setAttribute('aria-pressed',String(t==='light')); try{localStorage.setItem(THEME_KEY,t);}catch(e){} }
-    (function(){let t='dark';try{t=localStorage.getItem(THEME_KEY)||t;}catch(e){} applyTheme(t);})(); btnDark.addEventListener('click',()=>applyTheme('dark')); btnLight.addEventListener('click',()=>applyTheme('light'));
+    (function(){let t='light';try{t=localStorage.getItem(THEME_KEY)||t;}catch(e){} applyTheme(t);})(); btnDark.addEventListener('click',()=>applyTheme('dark')); btnLight.addEventListener('click',()=>applyTheme('light'));
 
-    // Config
+    // Time helpers
     function mkDate(y,m,d,hh=0,mm=0,ss=0){return new Date(y,m-1,d,hh,mm,ss)}
     const DAY=86400000, WEEK=7*DAY, HOUR=3600000, MIN=60000, SEC=1000;
     const START_DATE=mkDate(2025,9,29,0,0,0);
@@ -101,14 +133,15 @@
       {name:'Фаза 4 — Стаклени прегради',  done:false, deadline:mkDate(2025,12,8,0,0,0)},
     ];
 
-    // Optional: mark done via URL (?done=0,2) or imperative API
+    // Done via URL or imperative API
     const params=new URLSearchParams(location.search);
     if (params.has('done')) { params.get('done').split(',').map(s=>parseInt(s,10)).filter(n=>!isNaN(n)).forEach(i=>{ if(PHASES[i]) PHASES[i].done=true; }); }
     window.setPhaseDone=function(i,val=true){ if (PHASES[i]) { PHASES[i].done=!!val; tick(); } };
 
     // Elements
     const el={
-      mainTitle:document.getElementById('mainTitle'),
+      titleDate:document.getElementById('titleDate'),
+      titleTime:document.getElementById('titleTime'),
       tzText:document.getElementById('tzText'),
       statusText:document.getElementById('statusText'),
       weeks:document.getElementById('weeks'),
@@ -122,38 +155,29 @@
       mainTimer:document.getElementById('mainTimer')
     };
 
-    // Macedonian formatting (manual, no Intl)
+    // Manual Macedonian formatting
     const MK_WEEKDAYS=['недела','понеделник','вторник','среда','четврток','петок','сабота'];
     const MK_MONTHS=['јануари','февруари','март','април','мај','јуни','јули','август','септември','октомври','ноември','декември'];
     function pad2(n){ return String(n).padStart(2,'0'); }
-    function formatNowMK(d){
-      const weekday=MK_WEEKDAYS[d.getDay()];
-      const day=d.getDate();
-      const month=MK_MONTHS[d.getMonth()];
-      const hh=pad2(d.getHours());
-      const mm=pad2(d.getMinutes());
-      return weekday + ', ' + day + ' ' + month + ' ' + hh + ':' + mm; // e.g., "среда, 24 септември 08:23"
+    function nowParts(d){
+      return {
+        wd: MK_WEEKDAYS[d.getDay()],
+        day: d.getDate(),
+        m: MK_MONTHS[d.getMonth()],
+        hh: pad2(d.getHours()),
+        mm: pad2(d.getMinutes())
+      };
     }
     function formatDeadlineMK(d){
-      const dayName=MK_WEEKDAYS[d.getDay()];
-      const day=d.getDate();
-      const month=MK_MONTHS[d.getMonth()];
-      const year=d.getFullYear();
-      const hh=pad2(d.getHours());
-      const mm=pad2(d.getMinutes());
-      return dayName + ', ' + day + ' ' + month + ' ' + year + ' ' + hh + ':' + mm;
+      const wd=MK_WEEKDAYS[d.getDay()], day=d.getDate(), m=MK_MONTHS[d.getMonth()], y=d.getFullYear(), hh=pad2(d.getHours()), mm=pad2(d.getMinutes());
+      return wd + ', ' + day + ' ' + m + ' ' + y + ' ' + hh + ':' + mm;
     }
     function formatTZ(offsetMin){
-      // offsetMin is minutes behind UTC (e.g.  -120 for UTC+2)
-      const total = -offsetMin; // convert to minutes ahead of UTC
-      const sign = total>=0? '+' : '-';
-      const abs = Math.abs(total);
-      const h = pad2(Math.floor(abs/60));
-      const m = pad2(abs%60);
-      return 'GMT' + sign + h + ':' + m;
+      const total = -offsetMin; const sign = total>=0? '+' : '-'; const abs = Math.abs(total);
+      return 'GMT' + sign + String(Math.floor(abs/60)).padStart(2,'0') + ':' + String(abs%60).padStart(2,'0');
     }
 
-    // Init TZ & deadline text (manual formats)
+    // Init texts
     el.tzText.textContent = 'локално (' + formatTZ(new Date().getTimezoneOffset()) + ')';
     el.deadlineText.textContent = 'Краен датум: ' + formatDeadlineMK(DEADLINE);
 
@@ -181,8 +205,9 @@
     const URGENT_MS=7*DAY;
     function tick(){
       const now=new Date();
-      // Exact requested title format:
-      el.mainTitle.textContent = 'Сега е - ' + formatNowMK(now) + ' - а крајот на рокот за ЛЕАР е за:';
+      // Update two-line title
+      const parts = nowParts(now);
+      el.titleDate.innerHTML = parts.wd + ', ' + parts.day + ' ' + parts.m + ' <span class="time" id="titleTime">' + parts.hh + ':' + parts.mm + '</span>,';
 
       // Main timer
       el.mainTimer.classList.remove('blink');
@@ -204,7 +229,7 @@
         el.expired.style.display='';
       }
 
-      // Phase timers
+      // Phases
       PHASES.forEach((p,i)=>{
         const tw=document.getElementById('p_w_'+i),
               td=document.getElementById('p_d_'+i),
