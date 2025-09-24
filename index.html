@@ -13,30 +13,49 @@
          font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
 
     .wrap{width:min(1100px,94vw);padding:10px 0 20px}
-    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:6px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}
     .brand{width:clamp(140px,18vw,240px);height:auto;display:block}
     :root[data-theme="dark"] .brand{filter:invert(1) brightness(1.08)}
     :root[data-theme="light"] .brand{filter:none}
 
-    /* Title: exactly two lines, plain font (no bold), no extra styling */
-    h1{margin:8px 0 12px}
-    #mainTitle{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;line-height:1.2;color:var(--headline)}
+    /* Title: exactly two lines, plain font (no bold) */
+    h1{margin:10px 0 14px}
+    #mainTitle{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;line-height:1.2;color:var(--headline)}
     #mainTitle .row1,#mainTitle .row2{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    /* Provide base sizes; JS will shrink if needed so each row stays one line */
-    #mainTitle .row1{font-size:34px}
-    #mainTitle .row2{font-size:30px}
+    #mainTitle .row1{font-size:52px}
+    #mainTitle .row2{font-size:46px}
 
-    .timer{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-    .cell{background:linear-gradient(180deg,var(--card),#0b0b0b00);border:1px solid var(--border);border-radius:16px;padding:16px 10px;
-          box-shadow:0 6px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(0,0,0,.02)}
+    /* Main counter — boxier cells + bigger digits */
+    .timer{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+    .cell{
+      background:linear-gradient(180deg,var(--card),#0b0b0b00);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px 12px;
+      min-height:clamp(110px,18vw,180px);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      box-shadow:0 6px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(0,0,0,.02)
+    }
     :root[data-theme="dark"] .cell{box-shadow:0 6px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.02)}
-    .number{font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px;
-            font-size:clamp(28px,6.2vw,56px);line-height:1;margin-bottom:8px;text-shadow:0 0 18px var(--glow);color:var(--headline)}
-    .label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--subtle)}
+    .number{
+      font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;
+      font-weight:800;
+      font-variant-numeric:tabular-nums;
+      letter-spacing:.5px;
+      font-size:clamp(38px,7vw,76px);
+      line-height:1;
+      margin-bottom:10px;
+      text-shadow:0 0 18px var(--glow);
+      color:var(--headline)
+    }
+    .label{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--subtle)}
+
+    /* Thin divider between main counter and phases */
+    .divider{border:0;border-top:1px solid var(--border);margin:16px 0 12px}
 
     @keyframes blink{50%{opacity:.45}} .blink .number,.phase-card.blink{animation:blink .9s steps(2,start) infinite}
 
-    .phases{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .phases{margin-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .phase-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
     :root[data-theme="dark"] .phase-card{box-shadow:0 6px 24px rgba(0,0,0,.2)}
     .phase-title{font-weight:700;color:var(--headline);font-size:clamp(15px,2.2vw,18px)}
@@ -94,6 +113,8 @@
       <div class="cell"><div class="number" id="minutes">00</div><div class="label">минути</div></div>
       <div class="cell"><div class="number" id="seconds">00</div><div class="label">секунди</div></div>
     </div>
+
+    <hr class="divider" />
 
     <div class="phases" id="phases"></div>
 
@@ -175,7 +196,7 @@
     el.tzText.textContent = 'локално (' + formatTZ(new Date().getTimezoneOffset()) + ')';
     el.deadlineText.textContent = 'Краен датум: ' + formatDeadlineMK(DEADLINE);
 
-    // Simple auto-fit so each row stays on one line
+    // Auto-fit so each row stays on one line (start bigger, shrink if needed)
     function fitRow(row, maxPx, minPx){
       const wrap = document.getElementById('mainTitle');
       let size = maxPx;
@@ -190,8 +211,8 @@
       const row1 = document.querySelector('#mainTitle .row1');
       const row2 = document.querySelector('#mainTitle .row2');
       if(!row1 || !row2) return;
-      fitRow(row1, 34, 14);
-      fitRow(row2, 30, 12);
+      fitRow(row1, 52, 16);
+      fitRow(row2, 46, 14);
     }
     let _lastMinute = '';
 
