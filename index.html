@@ -10,7 +10,7 @@
 
     *{box-sizing:border-box} html,body{height:100%}
     body{margin:0;min-height:100svh;display:grid;place-items:center;background:var(--bg);color:var(--fg);
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif}
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
 
     .wrap{width:min(1100px,94vw);padding:10px 0 20px}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:6px}
@@ -18,15 +18,13 @@
     :root[data-theme="dark"] .brand{filter:invert(1) brightness(1.08)}
     :root[data-theme="light"] .brand{filter:none}
 
-    /* Styled two-line title */
-    h1{margin:10px 0 14px}
-    #mainTitle{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;line-height:1.2;color:var(--headline)}
-    #mainTitle .row1{font-size:clamp(22px,4.6vw,40px);font-weight:700;letter-spacing:.2px}
-    #mainTitle .row1 .lead{font-weight:700;color:var(--subtle)}
-    #mainTitle .row1 .date{font-weight:700}
-    #mainTitle .row1 .time{font-weight:900;text-shadow:0 0 14px var(--glow)}
-    #mainTitle .row2{font-size:clamp(20px,4.2vw,36px);font-weight:600;color:var(--headline);letter-spacing:.15px}
-    #mainTitle .row2 .brand{font-weight:900; letter-spacing:.06em}
+    /* Title: exactly two lines, plain font (no bold), no extra styling */
+    h1{margin:8px 0 12px}
+    #mainTitle{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;line-height:1.2;color:var(--headline)}
+    #mainTitle .row1,#mainTitle .row2{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* Provide base sizes; JS will shrink if needed so each row stays one line */
+    #mainTitle .row1{font-size:34px}
+    #mainTitle .row2{font-size:30px}
 
     .timer{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
     .cell{background:linear-gradient(180deg,var(--card),#0b0b0b00);border:1px solid var(--border);border-radius:16px;padding:16px 10px;
@@ -49,7 +47,7 @@
               line-height:1;margin-bottom:6px;color:var(--headline);text-shadow:0 0 12px var(--glow)}
     .p-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--subtle)}
 
-    .done-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.08ем;
+    .done-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.08em;
                   text-transform:uppercase;font-size:clamp(34px,7vw,80px);color:#000;background:rgba(255,255,255,.85);border-radius:12px;pointer-events:none}
     .is-done .done-overlay{display:flex} .is-done .phase-timer{opacity:.15;filter:grayscale(1)}
 
@@ -63,11 +61,14 @@
 
     .footer{display:flex;justify-content:center;margin-top:14px}
     .seg{display:inline-flex;border:1px solid var(--btn-border);border-radius:999px;overflow:hidden}
-    .seg button{background:var(--btn-bg);color:var(--btn-fg);border:0;padding:8px 12px;font-size:12px;cursor:pointer}
+    .seg button{background:var(--btn-bg);color:var(--fg);border:0;padding:8px 12px;font-size:12px;cursor:pointer}
     .seg button+button{border-left:1px solid var(--btn-border)} .seg button[aria-pressed="true"]{background:var(--btn-active);font-weight:700}
 
-    @media (max-width:900px){.phases{grid-template-columns:1fr}}
-    @media (max-width:720px){.header{flex-direction:column;align-items:flex-start;gap:10px} #mainTitle{align-items:flex-start;text-align:left} .timer{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:720px){
+      .header{flex-direction:column;align-items:flex-start;gap:10px}
+      #mainTitle{align-items:flex-start;text-align:left}
+      .timer{grid-template-columns:repeat(3,1fr)}
+    }
   </style>
 </head>
 <body>
@@ -77,13 +78,13 @@
       <div></div>
     </div>
 
-    <!-- Two-line dynamic title -->
+    <!-- Plain two-line dynamic title (no bold) -->
     <h1 id="mainTitle" aria-live="polite">
       <div class="row1">
         <span class="lead">Сега е - </span>
-        <span class="date" id="titleDate">среда, 24 септември <span class="time" id="titleTime">10:08</span>,</span>
+        <span class="date" id="titleDate">среда, 24 септември 10:08,</span>
       </div>
-      <div class="row2">а крајот на рокот за <span class="brand">ЛЕАР</span> е за:</div>
+      <div class="row2">а крајот на рокот за ЛЕАР е за:</div>
     </h1>
 
     <div id="mainTimer" class="timer" role="timer" aria-live="polite">
@@ -141,7 +142,6 @@
     // Elements
     const el={
       titleDate:document.getElementById('titleDate'),
-      titleTime:document.getElementById('titleTime'),
       tzText:document.getElementById('tzText'),
       statusText:document.getElementById('statusText'),
       weeks:document.getElementById('weeks'),
@@ -155,18 +155,12 @@
       mainTimer:document.getElementById('mainTimer')
     };
 
-    // Manual Macedonian formatting
+    // Macedonian formatting
     const MK_WEEKDAYS=['недела','понеделник','вторник','среда','четврток','петок','сабота'];
     const MK_MONTHS=['јануари','февруари','март','април','мај','јуни','јули','август','септември','октомври','ноември','декември'];
     function pad2(n){ return String(n).padStart(2,'0'); }
     function nowParts(d){
-      return {
-        wd: MK_WEEKDAYS[d.getDay()],
-        day: d.getDate(),
-        m: MK_MONTHS[d.getMonth()],
-        hh: pad2(d.getHours()),
-        mm: pad2(d.getMinutes())
-      };
+      return { wd: MK_WEEKDAYS[d.getDay()], day: d.getDate(), m: MK_MONTHS[d.getMonth()], hh: pad2(d.getHours()), mm: pad2(d.getMinutes()) };
     }
     function formatDeadlineMK(d){
       const wd=MK_WEEKDAYS[d.getDay()], day=d.getDate(), m=MK_MONTHS[d.getMonth()], y=d.getFullYear(), hh=pad2(d.getHours()), mm=pad2(d.getMinutes());
@@ -181,9 +175,30 @@
     el.tzText.textContent = 'локално (' + formatTZ(new Date().getTimezoneOffset()) + ')';
     el.deadlineText.textContent = 'Краен датум: ' + formatDeadlineMK(DEADLINE);
 
+    // Simple auto-fit so each row stays on one line
+    function fitRow(row, maxPx, minPx){
+      const wrap = document.getElementById('mainTitle');
+      let size = maxPx;
+      row.style.fontSize = size + 'px';
+      const limit = Math.max(0, wrap.clientWidth - 8);
+      while (row.scrollWidth > limit && size > minPx){
+        size -= 1;
+        row.style.fontSize = size + 'px';
+      }
+    }
+    function fitTitle(){
+      const row1 = document.querySelector('#mainTitle .row1');
+      const row2 = document.querySelector('#mainTitle .row2');
+      if(!row1 || !row2) return;
+      fitRow(row1, 34, 14);
+      fitRow(row2, 30, 12);
+    }
+    let _lastMinute = '';
+
     // Render phases
     function renderPhaseCards(){
-      el.phases.innerHTML=PHASES.map((p,i)=>`
+      const ph=document.getElementById('phases');
+      ph.innerHTML=PHASES.map((p,i)=>`
         <div class="phase-card" id="p_card_${i}">
           <div class="phase-title">${p.name}</div>
           <div class="phase-deadline" id="p_deadline_${i}"></div>
@@ -205,9 +220,13 @@
     const URGENT_MS=7*DAY;
     function tick(){
       const now=new Date();
-      // Update two-line title
       const parts = nowParts(now);
-      el.titleDate.innerHTML = parts.wd + ', ' + parts.day + ' ' + parts.m + ' <span class="time" id="titleTime">' + parts.hh + ':' + parts.mm + '</span>,';
+      el.titleDate.textContent = parts.wd + ', ' + parts.day + ' ' + parts.m + ' ' + parts.hh + ':' + parts.mm + ',';
+
+      if (_lastMinute !== parts.mm){
+        _lastMinute = parts.mm;
+        fitTitle();
+      }
 
       // Main timer
       el.mainTimer.classList.remove('blink');
@@ -269,7 +288,11 @@
 
     renderPhaseCards();
     tick();
+    fitTitle();
     setInterval(tick,500);
+    // Re-fit on resize
+    let _rto=null;
+    window.addEventListener('resize',()=>{ clearTimeout(_rto); _rto=setTimeout(fitTitle, 80); });
   </script>
 </body>
 </html>
